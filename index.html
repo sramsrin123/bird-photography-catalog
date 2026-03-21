@@ -237,10 +237,9 @@ function resolveLocation(photo) {
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 // ── Roboflow bird identification ────────────────────────────────
+// Model: bird-identification-v2/1 — 89.5% mAP, 10,146 training images
 const ROBOFLOW_API_KEY = 'rf_1NNH5tiQ2DUuTuIgGyQrVCitQko2';
-// Uses the Bird Species Predictor model on Roboflow Universe
-// (trained on 9,880 bird images, covers Indian species)
-const ROBOFLOW_URL = `https://serverless.roboflow.com/bird-species-predictor/bird-species-detector/1?api_key=${ROBOFLOW_API_KEY}`;
+const ROBOFLOW_URL = `https://serverless.roboflow.com/birdproject/bird-identification-v2/1?api_key=${ROBOFLOW_API_KEY}`;
 
 async function identifyBird(imageUrl) {
   try {
@@ -249,15 +248,15 @@ async function identifyBird(imageUrl) {
     if (!imgRes.ok) throw new Error(`Image fetch failed: ${imgRes.status}`);
     const blob = await imgRes.blob();
 
-    // 2. Convert to base64 (Roboflow expects raw base64, not a data URL)
+    // 2. Convert to base64 — Roboflow needs raw base64 only, NOT the data URI prefix
     const base64 = await new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.onload  = () => resolve(reader.result.split(',')[1]); // strip "data:...;base64,"
+      reader.onload  = () => resolve(reader.result.split(',')[1]); // strip "data:image/jpeg;base64,"
       reader.onerror = reject;
       reader.readAsDataURL(blob);
     });
 
-    // 3. POST to Roboflow as plain base64 body
+    // 3. POST raw base64 string as body
     const res = await fetch(ROBOFLOW_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -266,15 +265,18 @@ async function identifyBird(imageUrl) {
     if (!res.ok) throw new Error(`Roboflow HTTP ${res.status}`);
     const data = await res.json();
 
-    // 4. Parse result — Roboflow returns predictions array with class + confidence
+    // 4. Parse — Roboflow returns predictions[] with class + confidence
     const predictions = data.predictions || [];
     if (predictions.length === 0) return null;
 
-    // Pick highest-confidence prediction
-    const top = predictions.reduce((a, b) => (b.confidence > a.confidence ? b : a));
+    const top = predictions.reduce((a, b) => b.confidence > a.confidence ? b : a);
     return {
-      commonName: top.class.replace(/-/g, ' ').replace(/\w/g, c => c.toUpperCase()),
-      sciName: '',   // Roboflow model returns common names only
+      commonName: top.class
+        .replace(/[-_]/g, ' ')
+        .split(' ')
+        .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+        .join(' '),
+      sciName: '',
       score: Math.round(top.confidence * 100),
     };
   } catch(e) { console.warn('Roboflow error:', imageUrl, e); }
@@ -482,7 +484,8 @@ async function initMap() {
   }
 
   // Second pass — only call API for photos not yet in cache
-  const uncached = jobs.filter(j => cache[j.imageUrl.split('/').pop()] === undefined);
+  // Also retry any that previously returned null (e.g. from a broken API call)
+  const uncached = jobs.filter(j => cache[j.imageUrl.split('/').pop()] === undefined || cache[j.imageUrl.split('/').pop()] === null);
   if (uncached.length > 0) {
     setProgress(50, `Identifying ${uncached.length} new bird${uncached.length !== 1 ? 's' : ''}…`);
     for (let i = 0; i < uncached.length; i++) {
