@@ -238,12 +238,21 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 async function identifyBird(imageUrl) {
   try {
+    // Fetch the image ourselves and send as a blob — avoids iNaturalist
+    // being unable to reach our server (CORS / private host issue).
+    const imgRes = await fetch(imageUrl);
+    if (!imgRes.ok) throw new Error(`Image fetch failed: ${imgRes.status}`);
+    const blob = await imgRes.blob();
+
+    const form = new FormData();
+    form.append('image', blob, imageUrl.split('/').pop());
+    form.append('locale', 'en');
+
     const res = await fetch('https://api.inaturalist.org/v1/computervision/score_image', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ image_url: imageUrl, locale: 'en' })
+      body: form   // multipart/form-data — no Content-Type header needed, browser sets it
     });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    if (!res.ok) throw new Error(`iNat HTTP ${res.status}`);
     const data = await res.json();
     for (const r of (data.results || [])) {
       const t = r.taxon;
