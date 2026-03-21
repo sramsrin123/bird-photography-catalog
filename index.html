@@ -165,9 +165,9 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
 //    lat/lon:  exact GPS if you have it, otherwise null (auto-resolved)
 // ═══════════════════════════════════════════════════════════════════
 const PHOTOS = [
-  { file:"VA109213.jpg", keywords:["Bird","India","Pune"], date:"2025-12-23", lat:null, lon:null },
-  { file:"VA109244.jpg", keywords:["Bird","India","Pune"], date:"2025-12-23", lat:null, lon:null },
-  { file:"VA109270.jpg", keywords:["Bird","India","Pune"], date:"2025-12-23", lat:null, lon:null },
+  { file:"VA109213.jpg", keywords:["Bird","India","Pune"], date:"2025-12-23", lat:null, lon:null, birdName:"Wilson's Warbler", sciName:"Cardellina pusilla", score:75},
+  { file:"VA109244.jpg", keywords:["Bird","India","Pune"], date:"2025-12-23", lat:null, lon:null, birdName:"White-throated Kingfisher", sciName:"Halcyon smyrnensis", score:85 },
+  { file:"VA109270.jpg", keywords:["Bird","India","Pune"], date:"2025-12-23", lat:null, lon:null, birdName:"Marsh Tit", sciName:"Poecile palustris", score:75},
 ];
 // ═══════════════════════════════════════════════════════════════════
 
@@ -438,11 +438,15 @@ async function initMap() {
       allBounds.push([lat, lon]);
 
       const imageUrl = `photos/${photo.file}`;
-      const result = addMarker(lat, lon, '__loading__', imageUrl, {
+      const result = addMarker(lat, lon, photo.birdName || '__loading__', imageUrl, {
         locLabel: loc.label,
         keywords: photo.keywords,
         date:     photo.date,
         filename: photo.file,
+        sciName:  photo.sciName || '',
+        score:    photo.score   || null,
+        sciName:  photo.sciName || '',
+        score:    photo.score   || null,
       });
       if (result) jobs.push({ birdBlockId: result.birdBlockId, imageUrl });
     });
