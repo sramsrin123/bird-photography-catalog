@@ -428,32 +428,66 @@ async function initMap() {
   // Map is ready — hide loading spinner
   hideLoading();
 
-  // Identify birds in background — needs internet but won't block the map
-  setProgress(50, `Identifying ${jobs.length} bird${jobs.length !== 1 ? 's' : ''}…`);
-  for (let i = 0; i < jobs.length; i++) {
-    const { birdBlockId, imageUrl } = jobs[i];
-    const absoluteUrl = new URL(imageUrl, window.location.href).href;
-    const bird = await identifyBird(absoluteUrl);
+  // ── Identify birds in background ────────────────────────────────
+  // Results are cached in localStorage keyed by filename.
+  // The API is only called once per photo — subsequent page loads
+  // read instantly from cache with no network request.
+  const CACHE_KEY = 'birdID_cache_v1';
+  function loadCache() {
+    try { return JSON.parse(localStorage.getItem(CACHE_KEY) || '{}'); }
+    catch(e) { return {}; }
+  }
+  function saveCache(cache) {
+    try { localStorage.setItem(CACHE_KEY, JSON.stringify(cache)); }
+    catch(e) { console.warn('Cache save failed', e); }
+  }
 
-    const el = document.getElementById(birdBlockId);
-    if (el) {
-      if (bird) {
-        el.className = 'pop-bird';
-        el.innerHTML = `
-          <span class="bird-icon">🦜</span>
-          <div class="bird-info">
-            <div class="bird-common">${bird.commonName}</div>
-            <div class="bird-sci">${bird.sciName}</div>
-          </div>
-          <div class="bird-conf">${bird.score}%</div>`;
-      } else {
-        el.className = 'pop-bird none';
-        el.innerHTML = `
-          <span class="bird-icon">❓</span>
-          <div class="bird-info"><div class="bird-common">Bird not identified</div></div>`;
-      }
+  function applyBirdResult(el, bird) {
+    if (!el) return;
+    if (bird) {
+      el.className = 'pop-bird';
+      el.innerHTML = `
+        <span class="bird-icon">🦜</span>
+        <div class="bird-info">
+          <div class="bird-common">${bird.commonName}</div>
+          <div class="bird-sci">${bird.sciName}</div>
+        </div>
+        <div class="bird-conf">${bird.score}%</div>`;
+    } else {
+      el.className = 'pop-bird none';
+      el.innerHTML = `
+        <span class="bird-icon">❓</span>
+        <div class="bird-info"><div class="bird-common">Bird not identified</div></div>`;
     }
-    if (i < jobs.length - 1) await sleep(300);
+  }
+
+  const cache = loadCache();
+
+  // First pass — apply any already-cached results immediately (instant, no API)
+  for (const { birdBlockId, imageUrl } of jobs) {
+    const filename = imageUrl.split('/').pop();
+    if (cache[filename] !== undefined) {
+      applyBirdResult(document.getElementById(birdBlockId), cache[filename]);
+    }
+  }
+
+  // Second pass — only call API for photos not yet in cache
+  const uncached = jobs.filter(j => cache[j.imageUrl.split('/').pop()] === undefined);
+  if (uncached.length > 0) {
+    setProgress(50, `Identifying ${uncached.length} new bird${uncached.length !== 1 ? 's' : ''}…`);
+    for (let i = 0; i < uncached.length; i++) {
+      const { birdBlockId, imageUrl } = uncached[i];
+      const filename = imageUrl.split('/').pop();
+      const absoluteUrl = new URL(imageUrl, window.location.href).href;
+      const bird = await identifyBird(absoluteUrl);
+
+      // Save to cache — null means "tried but not identified", so we don't retry
+      cache[filename] = bird;
+      saveCache(cache);
+
+      applyBirdResult(document.getElementById(birdBlockId), bird);
+      if (i < uncached.length - 1) await sleep(300);
+    }
   }
 }
 </script>
