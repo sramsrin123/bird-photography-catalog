@@ -264,14 +264,15 @@ async function identifyBird(imageUrl) {
         body: base64,
       }
     );
-    if (!res.ok) throw new Error(`Roboflow HTTP ${res.status}: ${await res.text()}`);
-    const data = await res.json();
+    const rawText = await res.text();
+    console.log('[Roboflow] status:', res.status, 'response:', rawText);
+    if (!res.ok) throw new Error(`Roboflow HTTP ${res.status}: ${rawText}`);
+    const data = JSON.parse(rawText);
 
     // 4. Classification model returns top prediction in data.top / data.confidence
     //    Object detection models return data.predictions[]
     //    Handle both formats:
     if (data.top) {
-      // Classification response
       return {
         commonName: data.top
           .replace(/[-_]/g, ' ')
@@ -283,7 +284,7 @@ async function identifyBird(imageUrl) {
       };
     }
     const predictions = data.predictions || [];
-    if (predictions.length === 0) return null;
+    if (predictions.length === 0) { console.warn('[Roboflow] no predictions in response'); return null; }
     const top = predictions.reduce((a, b) => b.confidence > a.confidence ? b : a);
     return {
       commonName: top.class
@@ -294,7 +295,7 @@ async function identifyBird(imageUrl) {
       sciName: '',
       score: Math.round(top.confidence * 100),
     };
-  } catch(e) { console.warn('Roboflow error:', imageUrl, e); }
+  } catch(e) { console.error('[Roboflow] error for', imageUrl, e); }
   return null;
 }
 
