@@ -236,38 +236,48 @@ function resolveLocation(photo) {
 // ── iNaturalist CV ───────────────────────────────────────────────
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
+// ── Roboflow bird identification ────────────────────────────────
+const ROBOFLOW_API_KEY = 'rf_1NNH5tiQ2DUuTuIgGyQrVCitQko2';
+// Uses the Bird Species Predictor model on Roboflow Universe
+// (trained on 9,880 bird images, covers Indian species)
+const ROBOFLOW_URL = `https://serverless.roboflow.com/bird-species-predictor/bird-species-detector/1?api_key=${ROBOFLOW_API_KEY}`;
+
 async function identifyBird(imageUrl) {
   try {
-    // Fetch the image ourselves and send as a blob — avoids iNaturalist
-    // being unable to reach our server (CORS / private host issue).
+    // 1. Fetch the image from GitHub Pages
     const imgRes = await fetch(imageUrl);
     if (!imgRes.ok) throw new Error(`Image fetch failed: ${imgRes.status}`);
     const blob = await imgRes.blob();
 
-    const form = new FormData();
-    form.append('image', blob, imageUrl.split('/').pop());
-    form.append('locale', 'en');
-
-    const res = await fetch('https://api.inaturalist.org/v1/computervision/score_image', {
-      method: 'POST',
-      body: form   // multipart/form-data — no Content-Type header needed, browser sets it
+    // 2. Convert to base64 (Roboflow expects raw base64, not a data URL)
+    const base64 = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload  = () => resolve(reader.result.split(',')[1]); // strip "data:...;base64,"
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
     });
-    if (!res.ok) throw new Error(`iNat HTTP ${res.status}`);
+
+    // 3. POST to Roboflow as plain base64 body
+    const res = await fetch(ROBOFLOW_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: base64,
+    });
+    if (!res.ok) throw new Error(`Roboflow HTTP ${res.status}`);
     const data = await res.json();
-    for (const r of (data.results || [])) {
-      const t = r.taxon;
-      if (!t) continue;
-      const isAves =
-        (t.iconic_taxon_name && t.iconic_taxon_name.toLowerCase() === 'aves') ||
-        (t.ancestry && t.ancestry.split('/').includes('3')) ||
-        (t.class_name && t.class_name.toLowerCase() === 'aves');
-      if (isAves) return {
-        commonName: t.preferred_common_name || t.name,
-        sciName: t.name,
-        score: Math.round((r.combined_score || r.score || 0) * 100),
-      };
-    }
-  } catch(e) { console.warn('iNat error:', imageUrl, e); }
+
+    // 4. Parse result — Roboflow returns predictions array with class + confidence
+    const predictions = data.predictions || [];
+    if (predictions.length === 0) return null;
+
+    // Pick highest-confidence prediction
+    const top = predictions.reduce((a, b) => (b.confidence > a.confidence ? b : a));
+    return {
+      commonName: top.class.replace(/-/g, ' ').replace(/\w/g, c => c.toUpperCase()),
+      sciName: '',   // Roboflow model returns common names only
+      score: Math.round(top.confidence * 100),
+    };
+  } catch(e) { console.warn('Roboflow error:', imageUrl, e); }
   return null;
 }
 
