@@ -237,9 +237,8 @@ function resolveLocation(photo) {
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 // ── Roboflow bird identification ────────────────────────────────
-// Model: bird-identification-v2/1 — 89.5% mAP, 10,146 training images
+// Model: bird-species-predictor/bird-species-detector — 525 species, 9,880 images
 const ROBOFLOW_API_KEY = 'rf_1NNH5tiQ2DUuTuIgGyQrVCitQko2';
-const ROBOFLOW_URL = `https://serverless.roboflow.com/birdproject/bird-identification-v2/1?api_key=${ROBOFLOW_API_KEY}`;
 
 async function identifyBird(imageUrl) {
   try {
@@ -248,27 +247,43 @@ async function identifyBird(imageUrl) {
     if (!imgRes.ok) throw new Error(`Image fetch failed: ${imgRes.status}`);
     const blob = await imgRes.blob();
 
-    // 2. Convert to base64 — Roboflow needs raw base64 only, NOT the data URI prefix
+    // 2. Convert to base64 — strip the data URI prefix, send raw base64 only
     const base64 = await new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.onload  = () => resolve(reader.result.split(',')[1]); // strip "data:image/jpeg;base64,"
+      reader.onload  = () => resolve(reader.result.split(',')[1]);
       reader.onerror = reject;
       reader.readAsDataURL(blob);
     });
 
-    // 3. POST raw base64 string as body
-    const res = await fetch(ROBOFLOW_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: base64,
-    });
-    if (!res.ok) throw new Error(`Roboflow HTTP ${res.status}`);
+    // 3. POST to Roboflow — API key as query param, raw base64 as body
+    const res = await fetch(
+      `https://serverless.roboflow.com/bird-species-predictor/bird-species-detector/1?api_key=${ROBOFLOW_API_KEY}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: base64,
+      }
+    );
+    if (!res.ok) throw new Error(`Roboflow HTTP ${res.status}: ${await res.text()}`);
     const data = await res.json();
 
-    // 4. Parse — Roboflow returns predictions[] with class + confidence
+    // 4. Classification model returns top prediction in data.top / data.confidence
+    //    Object detection models return data.predictions[]
+    //    Handle both formats:
+    if (data.top) {
+      // Classification response
+      return {
+        commonName: data.top
+          .replace(/[-_]/g, ' ')
+          .split(' ')
+          .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+          .join(' '),
+        sciName: '',
+        score: Math.round((data.confidence || 0) * 100),
+      };
+    }
     const predictions = data.predictions || [];
     if (predictions.length === 0) return null;
-
     const top = predictions.reduce((a, b) => b.confidence > a.confidence ? b : a);
     return {
       commonName: top.class
