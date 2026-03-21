@@ -236,18 +236,17 @@ function resolveLocation(photo) {
 // ── iNaturalist CV ───────────────────────────────────────────────
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-// ── Roboflow bird identification ────────────────────────────────
-// Model: bird-species-predictor/bird-species-detector — 525 species, 9,880 images
-const ROBOFLOW_API_KEY = 'rf_1NNH5tiQ2DUuTuIgGyQrVCitQko2';
+// ── Claude Vision bird identification ───────────────────────────
+const CLAUDE_API_KEY = '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';
 
 async function identifyBird(imageUrl) {
   try {
-    // 1. Fetch the image from GitHub Pages
+    // 1. Fetch image and convert to base64
     const imgRes = await fetch(imageUrl);
     if (!imgRes.ok) throw new Error(`Image fetch failed: ${imgRes.status}`);
     const blob = await imgRes.blob();
+    const mediaType = blob.type || 'image/jpeg';
 
-    // 2. Convert to base64 — strip the data URI prefix, send raw base64 only
     const base64 = await new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload  = () => resolve(reader.result.split(',')[1]);
@@ -255,47 +254,47 @@ async function identifyBird(imageUrl) {
       reader.readAsDataURL(blob);
     });
 
-    // 3. POST to Roboflow — API key as query param, raw base64 as body
-    const res = await fetch(
-      `https://serverless.roboflow.com/bird-species-predictor/bird-species-detector/1?api_key=${ROBOFLOW_API_KEY}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: base64,
-      }
-    );
-    const rawText = await res.text();
-    console.log('[Roboflow] status:', res.status, 'response:', rawText);
-    if (!res.ok) throw new Error(`Roboflow HTTP ${res.status}: ${rawText}`);
-    const data = JSON.parse(rawText);
+    // 2. Send to Claude Vision API
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'x-api-key': CLAUDE_API_KEY,
+        'anthropic-version': '2023-06-01',
+        'content-type': 'application/json',
+        'anthropic-dangerous-allow-browser': 'true',
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 100,
+        messages: [{
+          role: 'user',
+          content: [
+            {
+              type: 'image',
+              source: { type: 'base64', media_type: mediaType, data: base64 }
+            },
+            {
+              type: 'text',
+              text: 'Identify the bird in this photo. Reply with JSON only, no other text: {"commonName":"...","sciName":"...","confidence":0.0}. If no bird is visible reply: {"commonName":null,"sciName":null,"confidence":0}'
+            }
+          ]
+        }]
+      })
+    });
 
-    // 4. Classification model returns top prediction in data.top / data.confidence
-    //    Object detection models return data.predictions[]
-    //    Handle both formats:
-    if (data.top) {
-      return {
-        commonName: data.top
-          .replace(/[-_]/g, ' ')
-          .split(' ')
-          .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
-          .join(' '),
-        sciName: '',
-        score: Math.round((data.confidence || 0) * 100),
-      };
-    }
-    const predictions = data.predictions || [];
-    if (predictions.length === 0) { console.warn('[Roboflow] no predictions in response'); return null; }
-    const top = predictions.reduce((a, b) => b.confidence > a.confidence ? b : a);
+    if (!res.ok) throw new Error(`Claude HTTP ${res.status}: ${await res.text()}`);
+    const data = await res.json();
+    const text = data.content?.[0]?.text?.trim();
+    console.log('[Claude] response:', text);
+
+    const parsed = JSON.parse(text);
+    if (!parsed.commonName) return null;
     return {
-      commonName: top.class
-        .replace(/[-_]/g, ' ')
-        .split(' ')
-        .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
-        .join(' '),
-      sciName: '',
-      score: Math.round(top.confidence * 100),
+      commonName: parsed.commonName,
+      sciName:    parsed.sciName || '',
+      score:      Math.round((parsed.confidence || 0) * 100),
     };
-  } catch(e) { console.error('[Roboflow] error for', imageUrl, e); }
+  } catch(e) { console.error('[Claude] error for', imageUrl, e); }
   return null;
 }
 
