@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Bird Photography Catalog Website</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet"/>
@@ -22,15 +22,21 @@
 }
 
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;background:var(--ink);color:var(--paper)}
+html,body{
+  height:100%;overflow:hidden;
+  font-family:'Crimson Pro',Georgia,serif;
+  background:var(--ink);color:var(--paper);
+  /* prevent iOS text size adjustment */
+  -webkit-text-size-adjust:100%;
+}
 
 /* ─── LOGIN ──────────────────────────────────────────────── */
 #gate{
   position:fixed;inset:0;z-index:9000;
   display:flex;align-items:center;justify-content:center;
   background:var(--ink);
+  padding:1rem;                /* breathing room on small screens */
 }
-/* animated feather-pattern bg */
 #gate::before{
   content:'';position:absolute;inset:0;
   background-image:
@@ -43,7 +49,7 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
 .g-card{
   position:relative;
   display:flex;
-  width:min(760px,94vw);
+  width:min(760px, 100%);
   border:1px solid rgba(138,186,148,.18);
   border-radius:2px;
   overflow:hidden;
@@ -52,7 +58,7 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
 }
 @keyframes cardIn{from{opacity:0;transform:translateY(28px) scale(.97)}to{opacity:1;transform:none}}
 
-/* left illustration panel */
+/* left illustration panel — hidden on small phones */
 .g-art{
   width:200px;flex-shrink:0;
   background:var(--moss);
@@ -70,60 +76,130 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
 .g-label{font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.22em;color:var(--sage);opacity:.75;text-transform:uppercase;position:relative;z-index:1;text-align:center}
 
 /* right form panel */
-.g-form{flex:1;background:var(--bark);padding:3rem 2.8rem;display:flex;flex-direction:column;justify-content:center}
-.g-form h1{font-family:'Cinzel',serif;font-size:1.45rem;font-weight:600;line-height:1.25;color:var(--paper);margin-bottom:.3rem;letter-spacing:.04em}
-.g-form .sub{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--sage);opacity:.65;margin-bottom:2.2rem}
+.g-form{
+  flex:1;background:var(--bark);
+  padding:2.5rem 2.2rem;
+  display:flex;flex-direction:column;justify-content:center;
+}
+.g-form h1{
+  font-family:'Cinzel',serif;font-size:clamp(1.1rem,4vw,1.45rem);
+  font-weight:600;line-height:1.25;color:var(--paper);
+  margin-bottom:.3rem;letter-spacing:.04em;
+}
+.g-form .sub{
+  font-size:clamp(.65rem,.8vw + .4rem,.78rem);
+  letter-spacing:.14em;text-transform:uppercase;
+  color:var(--sage);opacity:.65;margin-bottom:1.8rem;
+}
 .g-lbl{font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--sage);opacity:.75;margin-bottom:.45rem}
 .g-pwd{position:relative;margin-bottom:.9rem}
 .g-pwd input{
   width:100%;padding:.78rem 2.6rem .78rem .95rem;
   background:rgba(255,255,255,.04);
   border:1px solid rgba(138,186,148,.22);border-radius:2px;
-  color:var(--paper);font-family:'Crimson Pro',serif;font-size:1rem;letter-spacing:.06em;
+  color:var(--paper);font-family:'Crimson Pro',serif;
+  font-size:clamp(.95rem,2.5vw,1rem);
+  letter-spacing:.06em;
   outline:none;transition:border-color .25s,box-shadow .25s;
+  /* prevent iOS zoom on focus (needs font-size >= 16px equivalent) */
+  font-size:max(16px, 1rem);
 }
 .g-pwd input:focus{border-color:rgba(201,168,76,.5);box-shadow:0 0 0 3px rgba(201,168,76,.07)}
 .g-pwd input::placeholder{color:rgba(238,232,213,.22)}
-.g-eye{position:absolute;right:.8rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:rgba(138,186,148,.45);font-size:.9rem;transition:color .2s;line-height:1;padding:0}
+.g-eye{
+  position:absolute;right:.8rem;top:50%;transform:translateY(-50%);
+  background:none;border:none;cursor:pointer;
+  color:rgba(138,186,148,.45);font-size:.9rem;
+  transition:color .2s;line-height:1;padding:.25rem;
+  /* larger tap target on mobile */
+  min-width:2.5rem;min-height:2.5rem;
+  display:flex;align-items:center;justify-content:center;
+}
 .g-eye:hover{color:var(--sage)}
 .g-btn{
-  width:100%;padding:.78rem;
+  width:100%;padding:.82rem;
   background:var(--fern);border:1px solid var(--sage);border-radius:2px;
-  color:var(--paper);font-family:'Cinzel',serif;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--paper);font-family:'Cinzel',serif;font-size:.68rem;
+  letter-spacing:.22em;text-transform:uppercase;
   cursor:pointer;transition:background .25s,box-shadow .25s,transform .12s;
+  /* comfortable tap target */
+  min-height:44px;
 }
 .g-btn:hover{background:var(--sage);color:var(--ink);box-shadow:0 0 28px rgba(138,186,148,.28)}
 .g-btn:active{transform:scale(.99)}
-.g-err{margin-top:.75rem;font-size:.72rem;color:#e08070;letter-spacing:.05em;min-height:1em;opacity:0;transition:opacity .3s;text-align:center}
+.g-err{
+  margin-top:.75rem;font-size:.72rem;color:#e08070;
+  letter-spacing:.05em;min-height:1em;opacity:0;
+  transition:opacity .3s;text-align:center;
+}
 .g-err.on{opacity:1}
 
+/* ── Mobile: stack vertically, hide deco panel ── */
+@media (max-width: 520px){
+  #gate{ padding:.75rem; align-items:flex-start; padding-top:10vh; }
+  .g-card{ flex-direction:column; }
+  .g-art{ display:none; }          /* hide deco panel on tiny screens */
+  .g-form{ padding:2rem 1.5rem; }
+  .g-form h1{ font-size:1.3rem; }
+}
+
+/* ── Tablet: shrink deco panel ── */
+@media (max-width: 680px) and (min-width: 521px){
+  .g-art{ width:140px; padding:2rem 1rem; }
+  .g-bird{ font-size:3rem; }
+  .g-form{ padding:2rem 1.8rem; }
+}
+
 /* ─── APP SHELL ──────────────────────────────────────────── */
-#app{display:none;height:100vh;flex-direction:column}
+#app{display:none;height:100%;height:100dvh;flex-direction:column}
 #app.on{display:flex}
 
 /* topbar */
 #bar{
-  flex-shrink:0;height:50px;
+  flex-shrink:0;
+  height:50px;
   display:flex;align-items:center;gap:.85rem;padding:0 1.3rem;
   background:rgba(11,20,18,.96);
   border-bottom:1px solid rgba(74,124,89,.25);
   box-shadow:0 2px 22px rgba(0,0,0,.55);
   z-index:700;position:relative;
 }
-#bar .b-icon{font-size:1.4rem;line-height:1}
-#bar h1{font-family:'Cinzel',serif;font-size:.92rem;font-weight:600;color:var(--paper);letter-spacing:.05em;white-space:nowrap}
+#bar .b-icon{font-size:1.4rem;line-height:1;flex-shrink:0}
+#bar h1{
+  font-family:'Cinzel',serif;
+  font-size:clamp(.65rem, 1.5vw + .3rem, .92rem);
+  font-weight:600;color:var(--paper);letter-spacing:.05em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
 #bar .b-sep{width:1px;height:18px;background:rgba(138,186,148,.2);flex-shrink:0}
-#bar .b-note{font-size:.67rem;color:rgba(138,186,148,.45);letter-spacing:.06em;white-space:nowrap}
+#bar .b-note{
+  font-size:.67rem;color:rgba(138,186,148,.45);
+  letter-spacing:.06em;white-space:nowrap;
+  /* hide on very small screens */
+}
 #bar .b-pill{
   margin-left:auto;flex-shrink:0;
   font-size:.65rem;letter-spacing:.13em;text-transform:uppercase;
   color:var(--sage);background:rgba(74,124,89,.2);
   border:1px solid rgba(138,186,148,.2);padding:.22rem .65rem;border-radius:20px;
+  white-space:nowrap;
 }
 
-/* map */
-#map{flex:1}
-.leaflet-container{background:#080f0d}
+@media (max-width:480px){
+  #bar{ padding:0 .9rem; gap:.55rem; }
+  #bar .b-sep, #bar .b-note{ display:none; }  /* simplify topbar on phones */
+  #bar h1{ font-size:.75rem; }
+}
+
+/* map — use dynamic viewport height so it fills below the topbar */
+#map{
+  flex:1;
+  min-height:0;          /* flex child must be allowed to shrink */
+}
+.leaflet-container{
+  background:#080f0d;
+  height:100% !important;
+}
 
 /* ─── POPUP ──────────────────────────────────────────────── */
 .leaflet-popup-content-wrapper{
@@ -131,40 +207,74 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
   border:1px solid rgba(74,124,89,.45)!important;
   border-radius:3px!important;padding:0!important;overflow:hidden;
   box-shadow:0 20px 70px rgba(0,0,0,.8)!important;
+  /* never wider than viewport */
+  max-width:calc(100vw - 2rem) !important;
 }
 .leaflet-popup-tip{background:rgba(11,20,18,.97)!important}
 .leaflet-popup-content{margin:0!important;width:auto!important}
-.leaflet-popup-close-button{color:var(--sage)!important;font-size:1.1rem!important;padding:7px 10px!important;z-index:5}
+.leaflet-popup-close-button{
+  color:var(--sage)!important;font-size:1.1rem!important;
+  padding:7px 10px!important;z-index:5;
+  /* bigger tap target */
+  min-width:36px;min-height:36px;
+  display:flex!important;align-items:center;justify-content:center;
+}
 .leaflet-popup-close-button:hover{color:var(--gold)!important}
 
-.pop{width:265px}
+.pop{
+  width:265px;
+  /* shrink on very narrow screens */
+  max-width:calc(100vw - 3rem);
+}
 .pop-img{
-  position:relative;width:100%;height:175px;overflow:hidden;
+  position:relative;width:100%;
+  height:clamp(130px, 35vw, 175px);   /* shorter on small screens */
+  overflow:hidden;
   background:var(--ink);display:flex;align-items:center;justify-content:center;
 }
-.pop-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease}
+.pop-img img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  transition:transform .5s ease;
+  /* ensure image never overflows */
+  max-width:100%;
+}
 .pop-img img:hover{transform:scale(1.06)}
 .pop-img .pop-no{
   display:none;flex-direction:column;align-items:center;justify-content:center;
   width:100%;height:100%;gap:.35rem;
 }
 .pop-img .pop-no span{font-size:2.8rem;opacity:.18}
-.pop-img .pop-no small{font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(138,186,148,.35)}
+.pop-img .pop-no small{
+  font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(138,186,148,.35);
+}
 .pop-loc{
   position:absolute;bottom:8px;left:8px;
   background:rgba(11,20,18,.82);border:1px solid rgba(201,168,76,.35);border-radius:2px;
   padding:.16rem .48rem;font-size:.58rem;letter-spacing:.06em;color:var(--gold);
   backdrop-filter:blur(4px);
+  /* don't overflow image width */
+  max-width:calc(100% - 16px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
 .pop-body{padding:.85rem 1rem 1rem}
-.pop-name{font-family:'Cinzel',serif;font-size:.85rem;font-weight:600;color:var(--paper);margin-bottom:.5rem;word-break:break-all;line-height:1.35}
+.pop-name{
+  font-family:'Cinzel',serif;
+  font-size:clamp(.75rem, 2vw, .85rem);
+  font-weight:600;color:var(--paper);margin-bottom:.5rem;
+  word-break:break-all;line-height:1.35;
+}
 .pop-tags{display:flex;flex-wrap:wrap;gap:.28rem;margin-bottom:.6rem}
 .pop-tag{
-  font-size:.6rem;font-family:'Cinzel',serif;letter-spacing:.1em;text-transform:uppercase;
+  font-size:clamp(.55rem, 1.2vw, .6rem);
+  font-family:'Cinzel',serif;letter-spacing:.1em;text-transform:uppercase;
   padding:.16rem .48rem;border-radius:20px;
   border:1px solid rgba(138,186,148,.28);color:var(--sage);background:rgba(74,124,89,.18);
 }
-.pop-date{display:flex;align-items:center;gap:.38rem;font-size:.72rem;color:rgba(238,232,213,.38)}
+.pop-date{
+  display:flex;align-items:center;gap:.38rem;
+  font-size:clamp(.68rem, 1.5vw, .72rem);
+  color:rgba(238,232,213,.38);
+}
 .pop-date em{color:var(--gold);font-style:normal}
 
 /* ─── MARKER ─────────────────────────────────────────────── */
@@ -175,9 +285,25 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
   box-shadow:0 5px 18px rgba(0,0,0,.6),0 0 0 3px rgba(201,168,76,.12);
   display:flex;align-items:center;justify-content:center;cursor:pointer;
   transition:box-shadow .2s;
+  /* slightly larger on touch devices */
+  touch-action:manipulation;
 }
 .pin:hover{box-shadow:0 6px 24px rgba(0,0,0,.75),0 0 0 5px rgba(201,168,76,.22)}
 .pin-i{transform:rotate(45deg);font-size:14px;line-height:1;margin-top:1px}
+
+/* ─── LEAFLET MOBILE TWEAKS ──────────────────────────────── */
+/* Larger zoom controls on touch */
+@media (max-width:768px){
+  .leaflet-control-zoom a{
+    width:36px!important;height:36px!important;
+    line-height:36px!important;font-size:18px!important;
+  }
+  /* Keep popup close button easy to tap */
+  .leaflet-popup-close-button{
+    font-size:1.3rem!important;
+    padding:10px 12px!important;
+  }
+}
 </style>
 </head>
 <body>
@@ -231,7 +357,6 @@ const PHOTOS = [
 
 // ══════════════════════════════════════════════════════════════════
 //  2.  LOCATION DATABASE  (city/region → [lat, lon])
-//      More-specific entries are matched first (longer key wins)
 // ══════════════════════════════════════════════════════════════════
 const LOCS = {
   /* ── Indian cities & reserves ── */
@@ -251,7 +376,7 @@ const LOCS = {
   "bandhavgarh": [23.7167, 80.9667], "tadoba":      [20.2167, 79.3833],
   /* ── World cities ── */
   "london":      [51.5074, -0.1278], "paris":       [48.8566,  2.3522],
-  "new york":    [40.7128,-74.0060], "los angeles":  [34.0522,-118.2437],
+  "new york":    [40.7128,-74.0060], "los angeles": [34.0522,-118.2437],
   "tokyo":       [35.6762,139.6503], "beijing":     [39.9042,116.4074],
   "sydney":     [-33.8688,151.2093], "melbourne":  [-37.8136,144.9631],
   "dubai":       [25.2048, 55.2708], "singapore":   [ 1.3521,103.8198],
@@ -259,29 +384,25 @@ const LOCS = {
   "amsterdam":   [52.3676,  4.9041], "berlin":      [52.5200, 13.4050],
   "toronto":     [43.6532,-79.3832], "vancouver":   [49.2827,-123.1207],
   /* ── Countries ── */
-  "south africa":[-30.5595, 22.9375], "sri lanka":  [  7.8731, 80.7718],
+  "south africa":[-30.5595, 22.9375], "sri lanka":  [ 7.8731,  80.7718],
   "new zealand": [-40.9006,174.8860],
-  "india":       [ 20.5937, 78.9629], "china":      [ 35.8617,104.1954],
+  "india":       [ 20.5937, 78.9629], "china":      [35.8617, 104.1954],
   "japan":       [ 36.2048,138.2529], "australia":  [-25.2744,133.7751],
-  "usa":         [ 37.0902,-95.7129], "uk":         [ 55.3781, -3.4360],
-  "france":      [ 46.2276,  2.2137], "germany":    [ 51.1657, 10.4515],
-  "brazil":      [-14.2350,-51.9253], "kenya":      [ -0.0236, 37.9062],
-  "nepal":       [ 28.3949, 84.1240], "bhutan":     [ 27.5142, 90.4336],
-  "myanmar":     [ 21.9162, 95.9560], "thailand":   [ 15.8700,100.9925],
-  "malaysia":    [  4.2105,101.9758], "indonesia":  [ -0.7893,113.9213],
+  "usa":         [ 37.0902,-95.7129], "uk":         [55.3781,  -3.4360],
+  "france":      [ 46.2276,  2.2137], "germany":    [51.1657,  10.4515],
+  "brazil":      [-14.2350,-51.9253], "kenya":      [-0.0236,  37.9062],
+  "nepal":       [ 28.3949, 84.1240], "bhutan":     [27.5142,  90.4336],
+  "myanmar":     [ 21.9162, 95.9560], "thailand":   [15.8700, 100.9925],
+  "malaysia":    [  4.2105,101.9758], "indonesia":  [-0.7893, 113.9213],
 };
 
-// Resolve a photo to {lat, lon, label}
-// Scans all keywords, collects every one that exists in LOCS,
-// then picks the LONGEST match — longer name = more specific place
-// e.g. "pune" (4) beats "india" (5)... wait, "india" is longer.
-// So we assign a TIER: any city/region key beats any country key.
-// Cities are defined as anything that isn't in the COUNTRY_KEYS set.
+// Cities = everything NOT in this set; city always beats country
 const COUNTRY_KEYS = new Set([
   "india","china","japan","australia","usa","uk","france","germany",
   "brazil","kenya","south africa","sri lanka","new zealand","nepal",
   "bhutan","myanmar","thailand","malaysia","indonesia"
 ]);
+
 function resolve(photo) {
   // 1. Explicit GPS coords win outright
   const lt = parseFloat(photo.lat), ln = parseFloat(photo.lon);
@@ -289,16 +410,14 @@ function resolve(photo) {
       photo.lon !== null && photo.lon !== "" && !isNaN(ln)) {
     return { lat:lt, lon:ln, label:`${lt.toFixed(5)}, ${ln.toFixed(5)}` };
   }
-
-  // 2. Look up every keyword directly in LOCS; keep the best match.
-  //    City/region always beats country. Within the same tier, longer = better.
+  // 2. Scan keywords; city/region beats country, longer name beats shorter
   let best = null;
   for (const k of photo.keywords) {
     const key = k.toLowerCase().trim();
     if (!LOCS[key]) continue;
     const isCity = !COUNTRY_KEYS.has(key);
     if (!best ||
-        (isCity && COUNTRY_KEYS.has(best.key)) ||   // city beats country
+        (isCity && COUNTRY_KEYS.has(best.key)) ||
         (isCity === !COUNTRY_KEYS.has(best.key) && key.length > best.key.length)) {
       best = { key, original: k, coords: LOCS[key], isCity };
     }
@@ -315,12 +434,16 @@ function login() {
     const g = document.getElementById('gate');
     g.style.transition = 'opacity .5s ease';
     g.style.opacity = '0';
-    setTimeout(() => { g.style.display='none'; document.getElementById('app').classList.add('on'); initMap(); }, 520);
+    setTimeout(() => {
+      g.style.display = 'none';
+      document.getElementById('app').classList.add('on');
+      initMap();
+    }, 520);
   } else {
     const e = document.getElementById('err'), p = document.getElementById('pwd');
-    e.classList.add('on'); p.value=''; p.focus();
-    p.style.borderColor='rgba(224,110,90,.55)';
-    setTimeout(() => { e.classList.remove('on'); p.style.borderColor=''; }, 2800);
+    e.classList.add('on'); p.value = ''; p.focus();
+    p.style.borderColor = 'rgba(224,110,90,.55)';
+    setTimeout(() => { e.classList.remove('on'); p.style.borderColor = ''; }, 2800);
   }
 }
 function toggleEye() {
@@ -328,20 +451,31 @@ function toggleEye() {
   p.type = p.type === 'password' ? 'text' : 'password';
 }
 document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('pwd').addEventListener('keydown', e => { if (e.key==='Enter') login(); });
+  document.getElementById('pwd').addEventListener('keydown', e => {
+    if (e.key === 'Enter') login();
+  });
 });
 
 // ══════════════════════════════════════════════════════════════════
 //  4.  MAP
 // ══════════════════════════════════════════════════════════════════
 function initMap() {
-  const map = L.map('map', { center:[20,78], zoom:5, zoomControl:true });
+  const map = L.map('map', {
+    center:[20,78], zoom:5, zoomControl:true,
+    // Better touch handling
+    tap: true,
+    tapTolerance: 15,
+  });
 
-  // Dark nature tiles
   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
     attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/">CARTO</a>',
     subdomains:'abcd', maxZoom:19
   }).addTo(map);
+
+  // Move zoom control to bottom-right on mobile to avoid thumb conflicts
+  if (window.innerWidth <= 768) {
+    map.zoomControl.setPosition('bottomright');
+  }
 
   // Group photos by resolved coord to offset overlapping pins
   const groups = {};
@@ -349,24 +483,22 @@ function initMap() {
     const r = resolve(photo);
     if (!r) return;
     const key = `${r.lat.toFixed(4)},${r.lon.toFixed(4)}`;
-    (groups[key] = groups[key]||[]).push({ photo, r });
+    (groups[key] = groups[key] || []).push({ photo, r });
   });
 
   const allBounds = [];
 
   Object.values(groups).forEach(group => {
     group.forEach(({ photo, r }, idx) => {
-      // Spread overlapping pins in a tiny arc so all are clickable
       let lat = r.lat, lon = r.lon;
       if (group.length > 1) {
         const angle = (2 * Math.PI * idx) / group.length;
-        const rad   = 0.018;          // ~2 km spread at city zoom
+        const rad = 0.018;
         lat = r.lat + rad * Math.cos(angle);
         lon = r.lon + rad * Math.sin(angle);
       }
       allBounds.push([lat, lon]);
 
-      // Custom teardrop marker
       const icon = L.divIcon({
         className: '',
         html: `<div class="pin"><div class="pin-i">🐦</div></div>`,
@@ -375,7 +507,6 @@ function initMap() {
         popupAnchor:[0, -36],
       });
 
-      // Popup content
       const tags = photo.keywords.map(k => `<span class="pop-tag">${k}</span>`).join('');
 
       const html = `
@@ -395,11 +526,13 @@ function initMap() {
 
       L.marker([lat, lon], { icon })
         .addTo(map)
-        .bindPopup(html, { maxWidth:285, minWidth:265 });
+        .bindPopup(html, {
+          maxWidth: Math.min(285, window.innerWidth - 32),
+          minWidth: Math.min(265, window.innerWidth - 32),
+        });
     });
   });
 
-  // Fit map to all pins
   if (allBounds.length === 1) {
     map.setView(allBounds[0], 11);
   } else if (allBounds.length > 1) {
@@ -410,11 +543,14 @@ function initMap() {
   const located = Object.values(groups).flat().length;
   const missed  = PHOTOS.length - located;
   document.getElementById('b-pill').textContent =
-    `${PHOTOS.length} Photo${PHOTOS.length!==1?'s':''}`;
+    `${PHOTOS.length} Photo${PHOTOS.length !== 1 ? 's' : ''}`;
   document.getElementById('b-note').textContent =
     located === PHOTOS.length
       ? `${located} pinned from keywords`
       : `${located} pinned · ${missed} location unknown`;
+
+  // Invalidate map size after layout settles (fixes blank map on some mobile browsers)
+  setTimeout(() => map.invalidateSize(), 100);
 }
 </script>
 </body>
