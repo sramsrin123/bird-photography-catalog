@@ -9,108 +9,173 @@
 <style>
 :root{
   --ink:#0b1412;--bark:#1a2820;--moss:#2b4a35;--fern:#4a7c59;
-  --sage:#8aba94;--mist:#c8dcc9;--paper:#eee8d5;--gold:#c9a84c;
-  --ember:#d4622a;--shadow:rgba(0,0,0,.55);
+  --sage:#8aba94;--paper:#eee8d5;--gold:#c9a84c;--ember:#d4622a;
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;background:var(--ink);color:var(--paper);-webkit-text-size-adjust:100%}
+html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;
+  background:var(--ink);color:var(--paper);-webkit-text-size-adjust:100%}
 
 /* ── LOGIN ── */
-#gate{position:fixed;inset:0;z-index:9000;display:flex;align-items:center;justify-content:center;background:var(--ink);padding:1rem}
-#gate::before{content:'';position:absolute;inset:0;background-image:radial-gradient(ellipse 120% 80% at 10% 80%,rgba(43,74,53,.65) 0%,transparent 55%),radial-gradient(ellipse 70% 90% at 90% 10%,rgba(26,40,32,.8) 0%,transparent 60%),radial-gradient(ellipse 50% 50% at 55% 55%,rgba(201,168,76,.06) 0%,transparent 55%);pointer-events:none}
-.g-card{position:relative;display:flex;width:min(760px,100%);border:1px solid rgba(138,186,148,.18);border-radius:2px;overflow:hidden;box-shadow:0 48px 140px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,255,255,.04);animation:cardIn .9s cubic-bezier(.16,1,.3,1) both}
+#gate{position:fixed;inset:0;z-index:9000;display:flex;align-items:center;
+  justify-content:center;background:var(--ink);padding:1rem}
+#gate::before{content:'';position:absolute;inset:0;background-image:
+  radial-gradient(ellipse 120% 80% at 10% 80%,rgba(43,74,53,.65) 0%,transparent 55%),
+  radial-gradient(ellipse 70% 90% at 90% 10%,rgba(26,40,32,.8) 0%,transparent 60%);
+  pointer-events:none}
+.g-card{position:relative;display:flex;width:min(760px,100%);
+  border:1px solid rgba(138,186,148,.18);border-radius:2px;overflow:hidden;
+  box-shadow:0 48px 140px rgba(0,0,0,.85);animation:cardIn .9s cubic-bezier(.16,1,.3,1) both}
 @keyframes cardIn{from{opacity:0;transform:translateY(28px) scale(.97)}to{opacity:1;transform:none}}
-.g-art{width:200px;flex-shrink:0;background:var(--moss);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.4rem;padding:2.5rem 1.4rem;border-right:1px solid rgba(138,186,148,.15);position:relative;overflow:hidden}
-.g-art::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 20%,rgba(201,168,76,.14),transparent 65%)}
+.g-art{width:200px;flex-shrink:0;background:var(--moss);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:1.4rem;padding:2.5rem 1.4rem;
+  border-right:1px solid rgba(138,186,148,.15);position:relative;overflow:hidden}
+.g-art::after{content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 20%,rgba(201,168,76,.14),transparent 65%)}
 .g-bird{font-size:4rem;line-height:1;filter:drop-shadow(0 0 18px rgba(201,168,76,.5));position:relative;z-index:1}
 .g-rule{width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(138,186,148,.45),transparent);position:relative;z-index:1}
-.g-label{font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.22em;color:var(--sage);opacity:.75;text-transform:uppercase;position:relative;z-index:1;text-align:center}
+.g-label{font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.22em;color:var(--sage);
+  opacity:.75;text-transform:uppercase;position:relative;z-index:1;text-align:center}
 .g-form{flex:1;background:var(--bark);padding:2.5rem 2.2rem;display:flex;flex-direction:column;justify-content:center}
-.g-form h1{font-family:'Cinzel',serif;font-size:clamp(1.1rem,4vw,1.45rem);font-weight:600;line-height:1.25;color:var(--paper);margin-bottom:.3rem;letter-spacing:.04em}
-.g-form .sub{font-size:clamp(.65rem,.8vw + .4rem,.78rem);letter-spacing:.14em;text-transform:uppercase;color:var(--sage);opacity:.65;margin-bottom:1.8rem}
+.g-form h1{font-family:'Cinzel',serif;font-size:clamp(1.1rem,4vw,1.45rem);font-weight:600;
+  line-height:1.25;color:var(--paper);margin-bottom:.3rem;letter-spacing:.04em}
+.g-form .sub{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--sage);opacity:.65;margin-bottom:1.8rem}
 .g-lbl{font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--sage);opacity:.75;margin-bottom:.45rem}
 .g-pwd{position:relative;margin-bottom:.9rem}
-.g-pwd input{width:100%;padding:.78rem 2.6rem .78rem .95rem;background:rgba(255,255,255,.04);border:1px solid rgba(138,186,148,.22);border-radius:2px;color:var(--paper);font-family:'Crimson Pro',serif;font-size:max(16px,1rem);letter-spacing:.06em;outline:none;transition:border-color .25s,box-shadow .25s}
+.g-pwd input{width:100%;padding:.78rem 2.6rem .78rem .95rem;background:rgba(255,255,255,.04);
+  border:1px solid rgba(138,186,148,.22);border-radius:2px;color:var(--paper);
+  font-family:'Crimson Pro',serif;font-size:max(16px,1rem);letter-spacing:.06em;
+  outline:none;transition:border-color .25s,box-shadow .25s}
 .g-pwd input:focus{border-color:rgba(201,168,76,.5);box-shadow:0 0 0 3px rgba(201,168,76,.07)}
 .g-pwd input::placeholder{color:rgba(238,232,213,.22)}
-.g-eye{position:absolute;right:.8rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:rgba(138,186,148,.45);font-size:.9rem;transition:color .2s;padding:.25rem;min-width:2.5rem;min-height:2.5rem;display:flex;align-items:center;justify-content:center}
+.g-eye{position:absolute;right:.8rem;top:50%;transform:translateY(-50%);background:none;border:none;
+  cursor:pointer;color:rgba(138,186,148,.45);font-size:.9rem;min-width:2.5rem;min-height:2.5rem;
+  display:flex;align-items:center;justify-content:center}
 .g-eye:hover{color:var(--sage)}
-.g-btn{width:100%;padding:.82rem;background:var(--fern);border:1px solid var(--sage);border-radius:2px;color:var(--paper);font-family:'Cinzel',serif;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;cursor:pointer;transition:background .25s,box-shadow .25s,transform .12s;min-height:44px}
+.g-btn{width:100%;padding:.82rem;background:var(--fern);border:1px solid var(--sage);border-radius:2px;
+  color:var(--paper);font-family:'Cinzel',serif;font-size:.68rem;letter-spacing:.22em;
+  text-transform:uppercase;cursor:pointer;transition:background .25s,box-shadow .25s;min-height:44px}
 .g-btn:hover{background:var(--sage);color:var(--ink);box-shadow:0 0 28px rgba(138,186,148,.28)}
 .g-btn:active{transform:scale(.99)}
-.g-err{margin-top:.75rem;font-size:.72rem;color:#e08070;letter-spacing:.05em;min-height:1em;opacity:0;transition:opacity .3s;text-align:center}
+.g-err{margin-top:.75rem;font-size:.72rem;color:#e08070;min-height:1em;opacity:0;transition:opacity .3s;text-align:center}
 .g-err.on{opacity:1}
-@media(max-width:520px){#gate{padding:.75rem;align-items:flex-start;padding-top:10vh}.g-card{flex-direction:column}.g-art{display:none}.g-form{padding:2rem 1.5rem}.g-form h1{font-size:1.3rem}}
-@media(max-width:680px) and (min-width:521px){.g-art{width:140px;padding:2rem 1rem}.g-bird{font-size:3rem}.g-form{padding:2rem 1.8rem}}
+@media(max-width:520px){#gate{padding:.75rem;align-items:flex-start;padding-top:10vh}
+  .g-card{flex-direction:column}.g-art{display:none}.g-form{padding:2rem 1.5rem}}
 
 /* ── APP ── */
 #app{display:none;height:100%;height:100dvh;flex-direction:column}
 #app.on{display:flex}
-#bar{flex-shrink:0;height:50px;display:flex;align-items:center;gap:.85rem;padding:0 1.3rem;background:rgba(11,20,18,.96);border-bottom:1px solid rgba(74,124,89,.25);box-shadow:0 2px 22px rgba(0,0,0,.55);z-index:700;position:relative}
+#bar{flex-shrink:0;height:50px;display:flex;align-items:center;gap:.85rem;padding:0 1.3rem;
+  background:rgba(11,20,18,.96);border-bottom:1px solid rgba(74,124,89,.25);
+  box-shadow:0 2px 22px rgba(0,0,0,.55);z-index:700;position:relative}
 #bar .b-icon{font-size:1.4rem;line-height:1;flex-shrink:0}
-#bar h1{font-family:'Cinzel',serif;font-size:clamp(.65rem,1.5vw + .3rem,.92rem);font-weight:600;color:var(--paper);letter-spacing:.05em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#bar h1{font-family:'Cinzel',serif;font-size:clamp(.65rem,1.5vw + .3rem,.92rem);
+  font-weight:600;color:var(--paper);letter-spacing:.05em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #bar .b-sep{width:1px;height:18px;background:rgba(138,186,148,.2);flex-shrink:0}
 #bar .b-note{font-size:.67rem;color:rgba(138,186,148,.45);letter-spacing:.06em;white-space:nowrap}
-#bar .b-pill{margin-left:auto;flex-shrink:0;font-size:.65rem;letter-spacing:.13em;text-transform:uppercase;color:var(--sage);background:rgba(74,124,89,.2);border:1px solid rgba(138,186,148,.2);padding:.22rem .65rem;border-radius:20px;white-space:nowrap}
-@media(max-width:480px){#bar{padding:0 .9rem;gap:.55rem}#bar .b-sep,#bar .b-note{display:none}#bar h1{font-size:.75rem}}
+#bar .b-pill{margin-left:auto;flex-shrink:0;font-size:.65rem;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--sage);background:rgba(74,124,89,.2);border:1px solid rgba(138,186,148,.2);
+  padding:.22rem .65rem;border-radius:20px}
+@media(max-width:480px){#bar{padding:0 .9rem;gap:.55rem}
+  #bar .b-sep,#bar .b-note{display:none}#bar h1{font-size:.75rem}}
 
-/* ── LOADING OVERLAY ── */
-#loading{position:absolute;inset:0;z-index:600;background:rgba(11,20,18,.88);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.2rem;backdrop-filter:blur(4px)}
-#loading.hidden{display:none}
-.ld-bird{font-size:3rem;animation:bob 1.2s ease-in-out infinite}
-@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
-.ld-bar-wrap{width:260px;height:4px;background:rgba(138,186,148,.15);border-radius:4px;overflow:hidden}
-.ld-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--fern),var(--gold));border-radius:4px;transition:width .35s ease}
-.ld-label{font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--sage);opacity:.75;text-align:center;min-height:1.2em}
-
-/* ── MAP ── */
-#map{flex:1;min-height:0;position:relative}
+#map{flex:1;min-height:0}
 .leaflet-container{background:#080f0d;height:100%!important}
 
 /* ── POPUP ── */
-.leaflet-popup-content-wrapper{background:rgba(11,20,18,.97)!important;border:1px solid rgba(74,124,89,.45)!important;border-radius:3px!important;padding:0!important;overflow:hidden;box-shadow:0 20px 70px rgba(0,0,0,.8)!important;max-width:calc(100vw - 2rem)!important}
+.leaflet-popup-content-wrapper{background:rgba(11,20,18,.97)!important;
+  border:1px solid rgba(74,124,89,.45)!important;border-radius:3px!important;
+  padding:0!important;overflow:hidden;box-shadow:0 20px 70px rgba(0,0,0,.8)!important;
+  max-width:calc(100vw - 2rem)!important}
 .leaflet-popup-tip{background:rgba(11,20,18,.97)!important}
 .leaflet-popup-content{margin:0!important;width:auto!important}
-.leaflet-popup-close-button{color:var(--sage)!important;font-size:1.1rem!important;padding:7px 10px!important;z-index:5;min-width:36px;min-height:36px;display:flex!important;align-items:center;justify-content:center}
+.leaflet-popup-close-button{color:var(--sage)!important;font-size:1.1rem!important;
+  padding:7px 10px!important;z-index:5;min-width:36px;min-height:36px;
+  display:flex!important;align-items:center;justify-content:center}
 .leaflet-popup-close-button:hover{color:var(--gold)!important}
-.pop{width:265px;max-width:calc(100vw - 3rem)}
-.pop-img{position:relative;width:100%;height:clamp(130px,35vw,175px);overflow:hidden;background:var(--ink);display:flex;align-items:center;justify-content:center}
-.pop-img img{width:100%;height:100%;object-fit:cover;display:block;max-width:100%;transition:transform .5s ease}
-.pop-img img:hover{transform:scale(1.06)}
-.pop-img .pop-no{display:none;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%;gap:.35rem}
-.pop-img .pop-no span{font-size:2.8rem;opacity:.18}
-.pop-img .pop-no small{font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(138,186,148,.35)}
-.pop-loc{position:absolute;bottom:8px;left:8px;background:rgba(11,20,18,.82);border:1px solid rgba(201,168,76,.35);border-radius:2px;padding:.16rem .48rem;font-size:.58rem;letter-spacing:.06em;color:var(--gold);backdrop-filter:blur(4px);max-width:calc(100% - 16px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.pop-body{padding:.85rem 1rem 1rem}
-.pop-name{font-family:'Cinzel',serif;font-size:clamp(.75rem,2vw,.85rem);font-weight:600;color:var(--paper);margin-bottom:.4rem;word-break:break-all;line-height:1.35}
 
-/* Bird ID block */
-.pop-bird{display:flex;align-items:center;gap:.45rem;background:rgba(43,74,53,.4);border:1px solid rgba(138,186,148,.25);border-radius:2px;padding:.35rem .6rem;margin-bottom:.55rem}
+/* ── POPUP CARD ── */
+.pop{width:310px;max-width:calc(100vw - 3rem)}
+
+/* Carousel */
+.carousel{position:relative;width:100%;height:clamp(160px,40vw,200px);overflow:hidden;background:var(--ink)}
+.carousel-track{display:flex;height:100%;transition:transform .35s ease}
+.carousel-slide{flex:0 0 100%;height:100%;position:relative}
+.carousel-slide img{width:100%;height:100%;object-fit:cover;display:block}
+.carousel-slide .no-img{width:100%;height:100%;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:.3rem;opacity:.2}
+.carousel-slide .no-img span{font-size:2.5rem}
+.carousel-nav{position:absolute;top:50%;transform:translateY(-50%);
+  background:rgba(11,20,18,.7);border:1px solid rgba(138,186,148,.3);color:var(--sage);
+  width:28px;height:28px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;cursor:pointer;font-size:.9rem;z-index:5;
+  transition:background .2s;backdrop-filter:blur(4px)}
+.carousel-nav:hover{background:rgba(43,74,53,.8)}
+.carousel-prev{left:8px}.carousel-next{right:8px}
+.carousel-nav.hidden{display:none}
+.carousel-counter{position:absolute;bottom:8px;right:8px;background:rgba(11,20,18,.75);
+  border:1px solid rgba(138,186,148,.2);border-radius:20px;padding:.12rem .45rem;
+  font-size:.6rem;color:var(--sage);letter-spacing:.06em;backdrop-filter:blur(4px)}
+.pop-loc{position:absolute;bottom:8px;left:8px;background:rgba(11,20,18,.82);
+  border:1px solid rgba(201,168,76,.35);border-radius:2px;padding:.16rem .48rem;
+  font-size:.58rem;letter-spacing:.06em;color:var(--gold);backdrop-filter:blur(4px);
+  max-width:55%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* Body */
+.pop-body{padding:.85rem 1rem 1rem}
+
+/* Bird name block */
+.pop-bird{display:flex;align-items:center;gap:.45rem;background:rgba(43,74,53,.4);
+  border:1px solid rgba(138,186,148,.25);border-radius:2px;padding:.35rem .6rem;margin-bottom:.6rem}
 .pop-bird .bird-icon{font-size:1rem;flex-shrink:0}
 .pop-bird .bird-info{min-width:0}
-.pop-bird .bird-common{font-family:'Cinzel',serif;font-size:.72rem;font-weight:600;color:var(--paper);letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.pop-bird .bird-sci{font-style:italic;font-size:.62rem;color:var(--sage);opacity:.75;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pop-bird .bird-common{font-family:'Cinzel',serif;font-size:.72rem;font-weight:600;
+  color:var(--paper);letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pop-bird .bird-sci{font-style:italic;font-size:.62rem;color:var(--sage);opacity:.75;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pop-bird .bird-conf{margin-left:auto;flex-shrink:0;font-size:.6rem;color:var(--gold);letter-spacing:.06em}
-.pop-bird.loading{opacity:.6}
-.pop-bird.loading .bird-common{animation:pulse 1s ease-in-out infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-.pop-bird.none{opacity:.45;border-style:dashed}
 
-.pop-tags{display:flex;flex-wrap:wrap;gap:.28rem;margin-bottom:.6rem}
-.pop-tag{font-size:clamp(.55rem,1.2vw,.6rem);font-family:'Cinzel',serif;letter-spacing:.1em;text-transform:uppercase;padding:.16rem .48rem;border-radius:20px;border:1px solid rgba(138,186,148,.28);color:var(--sage);background:rgba(74,124,89,.18)}
-.pop-date{display:flex;align-items:center;gap:.38rem;font-size:clamp(.68rem,1.5vw,.72rem);color:rgba(238,232,213,.38)}
+/* Audio player */
+.pop-audio{margin-bottom:.6rem}
+.pop-audio-label{font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--sage);opacity:.7;margin-bottom:.3rem;display:flex;align-items:center;gap:.35rem}
+.pop-audio audio{width:100%;height:28px;filter:invert(1) hue-rotate(120deg) brightness(.7) sepia(.5);
+  opacity:.85}
+
+/* Facts */
+.pop-facts{margin-bottom:.6rem}
+.pop-facts-label{font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--sage);opacity:.7;margin-bottom:.4rem;display:flex;align-items:center;gap:.35rem}
+.pop-facts ul{list-style:none;display:flex;flex-direction:column;gap:.3rem}
+.pop-facts ul li{font-size:.72rem;color:rgba(238,232,213,.75);line-height:1.4;
+  padding-left:.9rem;position:relative}
+.pop-facts ul li::before{content:'›';position:absolute;left:0;color:var(--gold);font-weight:bold}
+
+/* Tags + date */
+.pop-tags{display:flex;flex-wrap:wrap;gap:.28rem;margin-bottom:.5rem}
+.pop-tag{font-size:.58rem;font-family:'Cinzel',serif;letter-spacing:.1em;text-transform:uppercase;
+  padding:.14rem .44rem;border-radius:20px;border:1px solid rgba(138,186,148,.28);
+  color:var(--sage);background:rgba(74,124,89,.18)}
+.pop-date{font-size:.68rem;color:rgba(238,232,213,.38);letter-spacing:.04em}
 .pop-date em{color:var(--gold);font-style:normal}
+.pop-count{font-size:.68rem;color:rgba(238,232,213,.38);letter-spacing:.04em;margin-top:.3rem}
+.pop-count em{color:var(--gold);font-style:normal}
 
-/* ── MARKER ── */
-.pin{width:34px;height:34px;background:var(--fern);border:2.5px solid var(--gold);border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 5px 18px rgba(0,0,0,.6),0 0 0 3px rgba(201,168,76,.12);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:box-shadow .2s;touch-action:manipulation}
+/* Marker */
+.pin{width:34px;height:34px;background:var(--fern);border:2.5px solid var(--gold);
+  border-radius:50% 50% 50% 0;transform:rotate(-45deg);
+  box-shadow:0 5px 18px rgba(0,0,0,.6),0 0 0 3px rgba(201,168,76,.12);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  transition:box-shadow .2s;touch-action:manipulation}
 .pin:hover{box-shadow:0 6px 24px rgba(0,0,0,.75),0 0 0 5px rgba(201,168,76,.22)}
 .pin-i{transform:rotate(45deg);font-size:14px;line-height:1;margin-top:1px}
-@media(max-width:768px){.leaflet-control-zoom a{width:36px!important;height:36px!important;line-height:36px!important;font-size:18px!important}.leaflet-popup-close-button{font-size:1.3rem!important;padding:10px 12px!important}}
+@media(max-width:768px){
+  .leaflet-control-zoom a{width:36px!important;height:36px!important;line-height:36px!important;font-size:18px!important}
+  .leaflet-popup-close-button{font-size:1.3rem!important;padding:10px 12px!important}}
 </style>
 </head>
 <body>
 
-<!-- ════ LOGIN ════ -->
+<!-- LOGIN -->
 <div id="gate">
   <div class="g-card">
     <div class="g-art">
@@ -133,7 +198,7 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
   </div>
 </div>
 
-<!-- ════ APP ════ -->
+<!-- APP -->
 <div id="app">
   <div id="bar">
     <span class="b-icon">🦜</span>
@@ -142,173 +207,30 @@ html,body{height:100%;overflow:hidden;font-family:'Crimson Pro',Georgia,serif;ba
     <span class="b-note" id="b-note"></span>
     <span class="b-pill" id="b-pill"></span>
   </div>
-  <div id="map">
-    <div id="loading">
-      <div class="ld-bird">🐦</div>
-      <div class="ld-bar-wrap"><div class="ld-bar" id="ld-bar"></div></div>
-      <div class="ld-label" id="ld-label">Loading catalog…</div>
-    </div>
-  </div>
+  <div id="map"></div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
 'use strict';
 
-// ═══════════════════════════════════════════════════════════════════
-//  ✏️  PHOTO DATA — update this when you add new photos
-//
-//  Each entry:
-//    file:     filename inside the photos/ folder
-//    keywords: array of tags (include the city name for pin placement)
-//    date:     "YYYY-MM-DD"
-//    lat/lon:  exact GPS if you have it, otherwise null (auto-resolved)
-// ═══════════════════════════════════════════════════════════════════
-const PHOTOS = [
-  { file:"VA109213.jpg", keywords:["Bird","India","Pune"], date:"2025-12-23", lat:null, lon:null    , birdName:"Oriental White-eye", sciName:"Zosterops palpebrosus", score:95 },
-  { file:"VA109244.jpg", keywords:["Bird","India","Pune"], date:"2025-12-23", lat:null, lon:null    , birdName:"White-throated Kingfisher", sciName:"Halcyon smyrnensis", score:95 },
-  { file:"VA109270.jpg", keywords:["Bird","India","Pune"], date:"2025-12-23", lat:null, lon:null    , birdName:"Yellow-throated Sparrow (?)", sciName:"Petronia xanthocollis", score:0 },
+// ── DATA (generated by identify_birds.py) ────────────────────────
+const PHOTO_GROUPS = [
+  { location:"India, Pune", commonName:"Oriental White-eye", sciName:"Zosterops palpebrosus", score:95, lat:18.5204, lon:73.8567, keywords:["Bird", "India", "Pune"], facts:["Highly social birds forming flocks of 20-30 individuals, often seen in acrobatic feeding groups", "Prefer open woodlands, gardens, and orchards across India including Pune's urban and suburban areas", "Diet consists mainly of small insects, nectar, and fruits; important pollinators in Pune gardens", "Distinctive white eye-ring and pale yellow-green plumage make them easily identifiable across Indian regions"], audioUrl:null, photos:[{"file": "photos/India, Pune/Oriental White-eye/VA109213.jpg", "date": ""}] },
+  { location:"India, Pune", commonName:"Yellow-throated Sparrow", sciName:"Gymnorhinus xanthodis", score:0, lat:18.5204, lon:73.8567, keywords:["Bird", "India", "Pune"], facts:["Forages on ground for seeds and insects in small social flocks year-round.", "Inhabits dry scrubland and grasslands across central and western India including Pune region.", "Feeds primarily on grass seeds, particularly during dry seasons in Maharashtra.", "Males perform distinctive head-bobbing displays during breeding season in Deccan plateau areas."], audioUrl:null, photos:[{"file": "photos/India, Pune/Yellow-throated Sparrow/VA109270.jpg", "date": ""}] },
+  { location:"India, Pune", commonName:"White-throated Kingfisher", sciName:"Halcyon smyrnensis", score:95, lat:18.5204, lon:73.8567, keywords:["Bird", "India", "Pune"], facts:["Hunts fish by diving from perches; also eats crustaceans, insects, and small reptiles.", "Nests in burrows dug into riverbanks; territorial and vocal with loud laughing calls.", "Common resident throughout India including Pune; adapts to urban lakes and artificial water bodies.", "Distinctive chestnut head and white throat; active in pairs year-round across peninsular regions."], audioUrl:null, photos:[{"file": "photos/India, Pune/White-throated Kingfisher/VA109244.jpg", "date": ""}] },
 ];
-// ═══════════════════════════════════════════════════════════════════
 
-// ── Location database ───────────────────────────────────────────
-const LOCS = {
-  "new delhi":[28.6139,77.2090],"delhi":[28.6139,77.2090],
-  "pune":[18.5204,73.8567],"mumbai":[19.0760,72.8777],
-  "bangalore":[12.9716,77.5946],"bengaluru":[12.9716,77.5946],
-  "chennai":[13.0827,80.2707],"kolkata":[22.5726,88.3639],
-  "hyderabad":[17.3850,78.4867],"ahmedabad":[23.0225,72.5714],
-  "jaipur":[26.9124,75.7873],"lucknow":[26.8467,80.9462],
-  "varanasi":[25.3176,82.9739],"agra":[27.1767,78.0081],
-  "kochi":[9.9312,76.2673],"kerala":[10.8505,76.2711],
-  "goa":[15.2993,74.1240],"shimla":[31.1048,77.1734],
-  "darjeeling":[27.0360,88.2627],"corbett":[29.5300,78.7747],
-  "ranthambore":[26.0173,76.5026],"kaziranga":[26.5775,93.1711],
-  "bharatpur":[27.2152,77.5030],"sundarbans":[21.9497,89.1833],
-  "pench":[21.6833,79.2833],"kanha":[22.2833,80.6167],
-  "bandhavgarh":[23.7167,80.9667],"tadoba":[20.2167,79.3833],
-  "london":[51.5074,-0.1278],"paris":[48.8566,2.3522],
-  "new york":[40.7128,-74.0060],"los angeles":[34.0522,-118.2437],
-  "tokyo":[35.6762,139.6503],"beijing":[39.9042,116.4074],
-  "sydney":[-33.8688,151.2093],"melbourne":[-37.8136,144.9631],
-  "dubai":[25.2048,55.2708],"singapore":[1.3521,103.8198],
-  "nairobi":[-1.2921,36.8219],"cape town":[-33.9249,18.4241],
-  "amsterdam":[52.3676,4.9041],"berlin":[52.5200,13.4050],
-  "toronto":[43.6532,-79.3832],"vancouver":[49.2827,-123.1207],
-  "south africa":[-30.5595,22.9375],"sri lanka":[7.8731,80.7718],
-  "new zealand":[-40.9006,174.8860],
-  "india":[20.5937,78.9629],"china":[35.8617,104.1954],
-  "japan":[36.2048,138.2529],"australia":[-25.2744,133.7751],
-  "usa":[37.0902,-95.7129],"uk":[55.3781,-3.4360],
-  "france":[46.2276,2.2137],"germany":[51.1657,10.4515],
-  "brazil":[-14.2350,-51.9253],"kenya":[-0.0236,37.9062],
-  "nepal":[28.3949,84.1240],"bhutan":[27.5142,90.4336],
-  "myanmar":[21.9162,95.9560],"thailand":[15.8700,100.9925],
-  "malaysia":[4.2105,101.9758],"indonesia":[-0.7893,113.9213],
-};
-
-const COUNTRY_KEYS = new Set([
-  "india","china","japan","australia","usa","uk","france","germany",
-  "brazil","kenya","south africa","sri lanka","new zealand","nepal",
-  "bhutan","myanmar","thailand","malaysia","indonesia"
-]);
-
-function resolveLocation(photo) {
-  // 1. Explicit GPS coords
-  if (photo.lat !== null && !isNaN(photo.lat) && photo.lon !== null && !isNaN(photo.lon)) {
-    return { lat: photo.lat, lon: photo.lon, label: `${photo.lat.toFixed(5)}, ${photo.lon.toFixed(5)}` };
-  }
-  // 2. Keyword lookup — city beats country, longer name beats shorter
-  let best = null;
-  for (const k of photo.keywords) {
-    const key = k.toLowerCase().trim();
-    if (!LOCS[key]) continue;
-    const isCity = !COUNTRY_KEYS.has(key);
-    if (!best ||
-        (isCity && COUNTRY_KEYS.has(best.key)) ||
-        (isCity === !COUNTRY_KEYS.has(best.key) && key.length > best.key.length)) {
-      best = { key, original: k, coords: LOCS[key] };
-    }
-  }
-  return best ? { lat: best.coords[0], lon: best.coords[1], label: best.original } : null;
-}
-
-// ── iNaturalist CV ───────────────────────────────────────────────
-const sleep = ms => new Promise(r => setTimeout(r, ms));
-
-// ── Claude Vision bird identification ───────────────────────────
-// Key is split and encoded to prevent automated scanning
-const _k = ['c2stYW50LWFwaTAzLTV4NE94Yl8=','ZFZmbjJheEdpVDVPN3JTX2xzUEI=',
-            'SElUenVvZjlHU0J2bFdoNGJVSUM=','bmhxdmZBaXVoWm95cFhfWVBLZ3U=',
-            'eG9KUEdOa1FKclQxNlBseU8zZy0=','NkF3TjB3QUE='];
-const CLAUDE_API_KEY = _k.map(s => atob(s)).join('');
-
-async function identifyBird(imageUrl) {
-  try {
-    // 1. Fetch image and convert to base64
-    const imgRes = await fetch(imageUrl);
-    if (!imgRes.ok) throw new Error(`Image fetch failed: ${imgRes.status}`);
-    const blob = await imgRes.blob();
-    const mediaType = blob.type || 'image/jpeg';
-
-    const base64 = await new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload  = () => resolve(reader.result.split(',')[1]);
-      reader.onerror = reject;
-      reader.readAsDataURL(blob);
-    });
-
-    // 2. Send to Claude Vision API
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'x-api-key': CLAUDE_API_KEY,
-        'anthropic-version': '2023-06-01',
-        'content-type': 'application/json',
-        'anthropic-dangerous-allow-browser': 'true',
-      },
-      body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 100,
-        messages: [{
-          role: 'user',
-          content: [
-            {
-              type: 'image',
-              source: { type: 'base64', media_type: mediaType, data: base64 }
-            },
-            {
-              type: 'text',
-              text: 'Identify the bird in this photo. Reply with JSON only, no other text: {"commonName":"...","sciName":"...","confidence":0.0}. If no bird is visible reply: {"commonName":null,"sciName":null,"confidence":0}'
-            }
-          ]
-        }]
-      })
-    });
-
-    if (!res.ok) throw new Error(`Claude HTTP ${res.status}: ${await res.text()}`);
-    const data = await res.json();
-    const text = data.content?.[0]?.text?.trim();
-    console.log('[Claude] response:', text);
-
-    const parsed = JSON.parse(text);
-    if (!parsed.commonName) return null;
-    return {
-      commonName: parsed.commonName,
-      sciName:    parsed.sciName || '',
-      score:      Math.round((parsed.confidence || 0) * 100),
-    };
-  } catch(e) { console.error('[Claude] error for', imageUrl, e); }
-  return null;
-}
-
-// ── Login ────────────────────────────────────────────────────────
+// ── LOGIN ─────────────────────────────────────────────────────────
 function login() {
   if (document.getElementById('pwd').value === 'birdlover') {
     const g = document.getElementById('gate');
-    g.style.transition = 'opacity .5s ease';
-    g.style.opacity = '0';
-    setTimeout(() => { g.style.display = 'none'; document.getElementById('app').classList.add('on'); initMap(); }, 520);
+    g.style.transition = 'opacity .5s ease'; g.style.opacity = '0';
+    setTimeout(() => {
+      g.style.display = 'none';
+      document.getElementById('app').classList.add('on');
+      initMap();
+    }, 520);
   } else {
     const e = document.getElementById('err'), p = document.getElementById('pwd');
     e.classList.add('on'); p.value = ''; p.focus();
@@ -316,227 +238,135 @@ function login() {
     setTimeout(() => { e.classList.remove('on'); p.style.borderColor = ''; }, 2800);
   }
 }
-function toggleEye() { const p = document.getElementById('pwd'); p.type = p.type === 'password' ? 'text' : 'password'; }
+function toggleEye() {
+  const p = document.getElementById('pwd');
+  p.type = p.type === 'password' ? 'text' : 'password';
+}
 document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('pwd').addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
+  document.getElementById('pwd').addEventListener('keydown', e => {
+    if (e.key === 'Enter') login();
+  });
 });
 
-// ── Progress ─────────────────────────────────────────────────────
-function setProgress(pct, label) {
-  const bar = document.getElementById('ld-bar');
-  const lbl = document.getElementById('ld-label');
-  if (bar) bar.style.width = `${Math.min(100, pct)}%`;
-  if (lbl) lbl.textContent = label;
-}
-function hideLoading() {
-  const el = document.getElementById('loading');
-  if (el) el.classList.add('hidden');
-}
-
-// ── addMarker (public API) ───────────────────────────────────────
-let _map = null;
-
-function addMarker(lat, lng, birdName, imageUrl, opts = {}) {
-  if (!_map) return null;
-  const icon = L.divIcon({
-    className: '',
-    html: `<div class="pin"><div class="pin-i">🐦</div></div>`,
-    iconSize:[34,34], iconAnchor:[17,34], popupAnchor:[0,-36],
-  });
-  const locLabel = opts.locLabel || `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
-  const tags = (opts.keywords || []).map(k => `<span class="pop-tag">${k}</span>`).join('');
-  const birdBlockId = `bird-${Date.now()}-${Math.random().toString(36).slice(2)}`;
-
-  let birdBlockHtml;
-  if (birdName === '__loading__') {
-    birdBlockHtml = `<div class="pop-bird loading" id="${birdBlockId}">
-      <span class="bird-icon">🔍</span>
-      <div class="bird-info"><div class="bird-common">Identifying…</div></div>
-    </div>`;
-  } else if (birdName) {
-    birdBlockHtml = `<div class="pop-bird" id="${birdBlockId}">
-      <span class="bird-icon">🦜</span>
-      <div class="bird-info">
-        <div class="bird-common">${birdName}</div>
-        ${opts.sciName ? `<div class="bird-sci">${opts.sciName}</div>` : ''}
-      </div>
-      ${opts.score != null ? `<div class="bird-conf">${opts.score}%</div>` : ''}
-    </div>`;
-  } else {
-    birdBlockHtml = `<div class="pop-bird none" id="${birdBlockId}">
-      <span class="bird-icon">❓</span>
-      <div class="bird-info"><div class="bird-common">Bird not identified</div></div>
-    </div>`;
-  }
-
-  const filename = opts.filename || (imageUrl ? imageUrl.split('/').pop() : '');
-  const popupHtml = `
-    <div class="pop">
-      <div class="pop-img">
-        <img src="${imageUrl}" alt="${filename}"
-             onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-        <div class="pop-no"><span>🐦</span><small>photo not found</small></div>
-        <div class="pop-loc">📍 ${locLabel}</div>
-      </div>
-      <div class="pop-body">
-        <div class="pop-name">${filename}</div>
-        ${birdBlockHtml}
-        <div class="pop-tags">${tags}</div>
-        <div class="pop-date">📅 Created <em>${opts.date || ''}</em></div>
-      </div>
-    </div>`;
-
-  const marker = L.marker([lat, lng], { icon })
-    .addTo(_map)
-    .bindPopup(popupHtml, {
-      maxWidth: Math.min(285, window.innerWidth - 32),
-      minWidth: Math.min(265, window.innerWidth - 32),
-    });
-
-  return { marker, birdBlockId };
-}
-
-// ── Main ─────────────────────────────────────────────────────────
-async function initMap() {
-  _map = L.map('map', { center:[20,78], zoom:5, tap:true, tapTolerance:15 });
+// ── MAP ───────────────────────────────────────────────────────────
+function initMap() {
+  const map = L.map('map', { center:[20,78], zoom:5, tap:true, tapTolerance:15 });
   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
     attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/">CARTO</a>',
     subdomains:'abcd', maxZoom:19
-  }).addTo(_map);
-  if (window.innerWidth <= 768) _map.zoomControl.setPosition('bottomright');
-  setTimeout(() => _map.invalidateSize(), 100);
+  }).addTo(map);
+  if (window.innerWidth <= 768) map.zoomControl.setPosition('bottomright');
 
-  setProgress(10, 'Locating photos…');
-
-  // Resolve all locations (fully synchronous — no network needed)
-  const located = [];
-  for (const photo of PHOTOS) {
-    const loc = resolveLocation(photo);
-    if (loc) located.push({ photo, loc });
-    else console.warn('No location for', photo.file);
-  }
-
-  // Group overlapping pins
-  const groups = {};
-  located.forEach(item => {
-    const key = `${item.loc.lat.toFixed(4)},${item.loc.lon.toFixed(4)}`;
-    (groups[key] = groups[key] || []).push(item);
-  });
-
-  setProgress(30, 'Placing pins…');
   const allBounds = [];
-  const jobs = [];   // { birdBlockId, imageUrl }
+  let totalPhotos = 0;
 
-  Object.values(groups).forEach(group => {
-    group.forEach(({ photo, loc }, idx) => {
-      let lat = loc.lat, lon = loc.lon;
-      if (group.length > 1) {
-        const angle = (2 * Math.PI * idx) / group.length;
-        lat = loc.lat + 0.018 * Math.cos(angle);
-        lon = loc.lon + 0.018 * Math.sin(angle);
-      }
-      allBounds.push([lat, lon]);
+  PHOTO_GROUPS.forEach(group => {
+    if (group.lat === null || group.lon === null) return;
+    allBounds.push([group.lat, group.lon]);
+    totalPhotos += group.photos.length;
 
-      const imageUrl = `photos/${photo.file}`;
-      const result = addMarker(lat, lon, photo.birdName || '__loading__', imageUrl, {
-        locLabel: loc.label,
-        keywords: photo.keywords,
-        date:     photo.date,
-        filename: photo.file,
-        sciName:  photo.sciName || '',
-        score:    photo.score   || null,
-        sciName:  photo.sciName || '',
-        score:    photo.score   || null,
-        sciName:  photo.sciName || '',
-        score:    photo.score   || null,
-        sciName:  photo.sciName || '',
-        score:    photo.score   || null,
-        sciName:  photo.sciName || '',
-        score:    photo.score   || null,
-        sciName:  photo.sciName || '',
-        score:    photo.score   || null,
-        sciName:  photo.sciName || '',
-        score:    photo.score   || null,
-        sciName:  photo.sciName || '',
-        score:    photo.score   || null,
-      });
-      if (result) jobs.push({ birdBlockId: result.birdBlockId, imageUrl });
+    const icon = L.divIcon({
+      className: '',
+      html: `<div class="pin"><div class="pin-i">🐦</div></div>`,
+      iconSize:[34,34], iconAnchor:[17,34], popupAnchor:[0,-38],
     });
+
+    const n          = group.photos.length;
+    const carouselId = `car-${Math.random().toString(36).slice(2)}`;
+
+    // Carousel slides
+    const slides = group.photos.map(p => `
+      <div class="carousel-slide">
+        <img src="${p.file}" alt="${p.file.split('/').pop()}"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="no-img" style="display:none"><span>🐦</span></div>
+      </div>`).join('');
+
+    // Date line (use first photo's date if available)
+    const firstDate = group.photos.find(p => p.date)?.date || '';
+    const dateLine  = firstDate
+      ? `<div class="pop-date">📅 Photographed <em>${firstDate}</em></div>`
+      : '';
+
+    // Tags
+    const tags = (group.keywords || [])
+      .map(k => `<span class="pop-tag">${k}</span>`).join('');
+
+    // Facts bullets
+    const factsHtml = group.facts && group.facts.length
+      ? `<div class="pop-facts">
+           <div class="pop-facts-label">📋 About this bird</div>
+           <ul>${group.facts.map(f => `<li>${f}</li>`).join('')}</ul>
+         </div>`
+      : '';
+
+    // Audio player
+    const audioHtml = group.audioUrl
+      ? `<div class="pop-audio">
+           <div class="pop-audio-label">🔊 Bird call</div>
+           <audio controls preload="none" src="${group.audioUrl}"></audio>
+         </div>`
+      : '';
+
+    const popupHtml = `
+      <div class="pop">
+        <div class="carousel" id="${carouselId}">
+          <div class="carousel-track">${slides}</div>
+          <button class="carousel-nav carousel-prev ${n<=1?'hidden':''}"
+                  onclick="carouselMove('${carouselId}',-1)">‹</button>
+          <button class="carousel-nav carousel-next ${n<=1?'hidden':''}"
+                  onclick="carouselMove('${carouselId}', 1)">›</button>
+          <div class="carousel-counter" id="${carouselId}-counter">1 / ${n}</div>
+          <div class="pop-loc">📍 ${group.location}</div>
+        </div>
+        <div class="pop-body">
+          <div class="pop-bird">
+            <span class="bird-icon">🦜</span>
+            <div class="bird-info">
+              <div class="bird-common">${group.commonName}</div>
+              ${group.sciName ? `<div class="bird-sci">${group.sciName}</div>` : ''}
+            </div>
+            ${group.score ? `<div class="bird-conf">${group.score}%</div>` : ''}
+          </div>
+          ${audioHtml}
+          ${factsHtml}
+          <div class="pop-tags">${tags}</div>
+          ${dateLine}
+          <div class="pop-count"><em>${n}</em> photo${n!==1?'s':''} at this location</div>
+        </div>
+      </div>`;
+
+    L.marker([group.lat, group.lon], { icon })
+      .addTo(map)
+      .bindPopup(popupHtml, {
+        maxWidth: Math.min(330, window.innerWidth - 32),
+        minWidth: Math.min(310, window.innerWidth - 32),
+      });
   });
 
-  // Fit map
-  if (allBounds.length === 1) _map.setView(allBounds[0], 11);
-  else if (allBounds.length > 1) _map.fitBounds(L.latLngBounds(allBounds), { padding:[80,80] });
+  if (allBounds.length === 1) map.setView(allBounds[0], 11);
+  else if (allBounds.length > 1) map.fitBounds(L.latLngBounds(allBounds), { padding:[80,80] });
 
-  // Update topbar
-  document.getElementById('b-pill').textContent = `${PHOTOS.length} Photo${PHOTOS.length !== 1 ? 's' : ''}`;
-  document.getElementById('b-note').textContent = `${located.length} pinned`;
+  document.getElementById('b-pill').textContent =
+    `${totalPhotos} Photo${totalPhotos!==1?'s':''}`;
+  document.getElementById('b-note').textContent =
+    `${PHOTO_GROUPS.length} species pinned`;
 
-  // Map is ready — hide loading spinner
-  hideLoading();
+  setTimeout(() => map.invalidateSize(), 100);
+}
 
-  // ── Identify birds in background ────────────────────────────────
-  // Results are cached in localStorage keyed by filename.
-  // The API is only called once per photo — subsequent page loads
-  // read instantly from cache with no network request.
-  const CACHE_KEY = 'birdID_cache_v1';
-  function loadCache() {
-    try { return JSON.parse(localStorage.getItem(CACHE_KEY) || '{}'); }
-    catch(e) { return {}; }
-  }
-  function saveCache(cache) {
-    try { localStorage.setItem(CACHE_KEY, JSON.stringify(cache)); }
-    catch(e) { console.warn('Cache save failed', e); }
-  }
-
-  function applyBirdResult(el, bird) {
-    if (!el) return;
-    if (bird) {
-      el.className = 'pop-bird';
-      el.innerHTML = `
-        <span class="bird-icon">🦜</span>
-        <div class="bird-info">
-          <div class="bird-common">${bird.commonName}</div>
-          <div class="bird-sci">${bird.sciName}</div>
-        </div>
-        <div class="bird-conf">${bird.score}%</div>`;
-    } else {
-      el.className = 'pop-bird none';
-      el.innerHTML = `
-        <span class="bird-icon">❓</span>
-        <div class="bird-info"><div class="bird-common">Bird not identified</div></div>`;
-    }
-  }
-
-  const cache = loadCache();
-
-  // First pass — apply any already-cached results immediately (instant, no API)
-  for (const { birdBlockId, imageUrl } of jobs) {
-    const filename = imageUrl.split('/').pop();
-    if (cache[filename] !== undefined) {
-      applyBirdResult(document.getElementById(birdBlockId), cache[filename]);
-    }
-  }
-
-  // Second pass — only call API for photos not yet in cache
-  // Also retry any that previously returned null (e.g. from a broken API call)
-  const uncached = jobs.filter(j => cache[j.imageUrl.split('/').pop()] === undefined || cache[j.imageUrl.split('/').pop()] === null);
-  if (uncached.length > 0) {
-    setProgress(50, `Identifying ${uncached.length} new bird${uncached.length !== 1 ? 's' : ''}…`);
-    for (let i = 0; i < uncached.length; i++) {
-      const { birdBlockId, imageUrl } = uncached[i];
-      const filename = imageUrl.split('/').pop();
-      const absoluteUrl = new URL(imageUrl, window.location.href).href;
-      const bird = await identifyBird(absoluteUrl);
-
-      // Save to cache — null means "tried but not identified", so we don't retry
-      cache[filename] = bird;
-      saveCache(cache);
-
-      applyBirdResult(document.getElementById(birdBlockId), bird);
-      if (i < uncached.length - 1) await sleep(300);
-    }
-  }
+// ── CAROUSEL ──────────────────────────────────────────────────────
+const carouselState = {};
+function carouselMove(id, dir) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const track  = el.querySelector('.carousel-track');
+  const n      = track.querySelectorAll('.carousel-slide').length;
+  if (!carouselState[id]) carouselState[id] = 0;
+  carouselState[id] = (carouselState[id] + dir + n) % n;
+  track.style.transform = `translateX(-${carouselState[id] * 100}%)`;
+  const counter = document.getElementById(`${id}-counter`);
+  if (counter) counter.textContent = `${carouselState[id]+1} / ${n}`;
 }
 </script>
 </body>
